@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +43,7 @@ public class TopicosController {
 	CursoRepository cursoRepository;
 
 	@GetMapping
+	@Cacheable(value = "listaTopicos")
 	public Page<Topico> lista(@RequestParam(required = false) String nomeCurso, 
 			@PageableDefault(sort = "dataCriacao", direction = Direction.ASC, page = 0, size = 10) Pageable paginacao){	
 				
@@ -56,6 +59,8 @@ public class TopicosController {
 	}
 	
 	@PostMapping
+	@Transactional
+	@CacheEvict(value = "listaTopicos", allEntries = true)
 	public ResponseEntity<Topico> cadastrar(@Valid @RequestBody TopicoFormDTO form,  UriComponentsBuilder uriBuilder) {
 		Topico topico = form.toTopico(cursoRepository);
 		topicoRepository.save(topico);
@@ -78,6 +83,7 @@ public class TopicosController {
 	
 	@PutMapping("/{id}")
 	@Transactional
+	@CacheEvict(value = "listaTopicos", allEntries = true)
 	public ResponseEntity<Topico> atualizar(@PathVariable Long id, @Valid @RequestBody AtualizarTopicoFormDTO form) {
 		
 		Optional<Topico> optTopico = topicoRepository.findById(id);
@@ -91,6 +97,7 @@ public class TopicosController {
 	
 	@DeleteMapping("/{id}")
 	@Transactional
+	@CacheEvict(value = "listaTopicos", allEntries = true)
 	public ResponseEntity<?> atualizar(@PathVariable Long id) {
 		
 		Optional<Topico> optTopico = topicoRepository.findById(id);
