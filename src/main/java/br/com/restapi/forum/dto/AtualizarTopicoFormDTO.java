@@ -1,12 +1,10 @@
 package br.com.restapi.forum.dto;
 
-
-import java.util.Optional;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import br.com.restapi.forum.model.Topico;
 import br.com.restapi.forum.repository.TopicoRepository;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 
 public class AtualizarTopicoFormDTO {
 	
